@@ -1,0 +1,189 @@
+---
+layout: default
+permalink: /chat/
+title: Chat
+---
+
+<div class="post">
+  <header class="post-header">
+    <h1 class="post-title">Chat</h1>
+  </header>
+
+  <div id="chat-messages"></div>
+
+  <div id="chat-input-area">
+    <textarea id="chat-input" placeholder="Message..." rows="3" onkeydown="handleKey(event)"></textarea>
+    <button id="send-btn" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<style>
+  #chat-messages {
+    height: 60vh;
+    overflow-y: auto;
+    border: 1px solid var(--global-divider-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--global-card-bg-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .msg {
+    max-width: 85%;
+    padding: 0.6rem 0.9rem;
+    border-radius: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.95rem;
+  }
+
+  .msg-user {
+    align-self: flex-end;
+    background: var(--global-theme-color);
+    color: #fff;
+    border-bottom-right-radius: 3px;
+  }
+
+  .msg-ai {
+    align-self: flex-start;
+    background: var(--global-bg-color);
+    color: var(--global-text-color);
+    border: 1px solid var(--global-divider-color);
+    border-bottom-left-radius: 3px;
+  }
+
+  .msg-ai.streaming::after {
+    content: '▍';
+    animation: blink 0.7s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  #chat-input-area {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+
+  #chat-input {
+    flex: 1;
+    resize: none;
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--global-divider-color);
+    background: var(--global-card-bg-color);
+    color: var(--global-text-color);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+  }
+
+  #chat-input:focus {
+    border-color: var(--global-theme-color);
+  }
+
+  #send-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    background: var(--global-theme-color);
+    color: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    white-space: nowrap;
+    height: fit-content;
+  }
+
+  #send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+
+<script>
+  const API_URL  = 'https://unadmissive-hyacinth-cryptonymous.ngrok-free.dev/v1/chat/completions';
+  const API_KEY  = '3910936ad3c9298c13b49b4f5e0705e0307fcddc';
+  const MODEL    = 'Qwen/Qwen3-8B-AWQ';
+
+  const history  = [];
+  const messages = document.getElementById('chat-messages');
+  const input    = document.getElementById('chat-input');
+  const sendBtn  = document.getElementById('send-btn');
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function addMessage(role, text) {
+    const el = document.createElement('div');
+    el.className = 'msg ' + (role === 'user' ? 'msg-user' : 'msg-ai');
+    el.textContent = text;
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+    return el;
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text || sendBtn.disabled) return;
+
+    input.value = '';
+    sendBtn.disabled = true;
+
+    history.push({ role: 'user', content: text });
+    addMessage('user', text);
+
+    const el = addMessage('assistant', '');
+    el.classList.add('streaming');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + API_KEY,
+          'ngrok-skip-browser-warning': 'true'
+        },
+        body: JSON.stringify({ model: MODEL, messages: history, stream: true })
+      });
+
+      if (!res.ok) { el.textContent = 'Error: ' + res.status; return; }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let reply = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const lines = decoder.decode(value).split('\n');
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') break;
+          try {
+            const delta = JSON.parse(data).choices?.[0]?.delta?.content;
+            if (delta) { reply += delta; el.textContent = reply; messages.scrollTop = messages.scrollHeight; }
+          } catch {}
+        }
+      }
+
+      el.classList.remove('streaming');
+      history.push({ role: 'assistant', content: reply });
+
+    } catch (err) {
+      el.classList.remove('streaming');
+      el.textContent = 'Connection error. Is the server running?';
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+</script>
