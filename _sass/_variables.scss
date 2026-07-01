@@ -34,5 +34,12 @@ $black-color: #000000 !default;
 
 // Theme colors
 
-$code-bg-color-light:     rgba($purple-color, 0.05);
+$accent-color:            #1f5aa8 !default; // deep blue accent (light theme)
+$accent-color-hover:      #16437e !default;
+$accent-color-dark-mode:  #8ab4f8 !default; // soft blue accent (dark theme)
+
+$text-color-light-theme:  #212529 !default;
+$bg-color-dark-theme:     #1a1c1f !default;
+
+$code-bg-color-light:     rgba($accent-color, 0.05);
 $code-bg-color-dark:      #2c3237 !default;
