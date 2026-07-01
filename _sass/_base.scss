@@ -4,6 +4,21 @@
 
 // Typography
 
+body {
+  font-family: $font-family-sans;
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-serif;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
 p, h1, h2, h3, h4, h5, h6, em, div, li, span, strong {
   color: var(--global-text-color);
 }
@@ -96,13 +111,21 @@ blockquote {
   margin-left: 1rem;
   width: 100%;
 
+  img {
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  }
+
   .address {
     margin-bottom: 5px;
-    margin-top: 5px;
-    font-family: monospace;
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: var(--global-text-color-light);
+    text-align: center;
     p {
       display: inline-block;
       margin: 0;
+      color: var(--global-text-color-light);
     }
   }
 }
@@ -233,12 +256,56 @@ blockquote {
   }
 }
 
+// About page
+
+.post {
+  .post-header {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    .post-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .desc {
+      font-family: $font-family-sans;
+      color: var(--global-text-color-light);
+      font-size: 1.02rem;
+      margin-bottom: 0;
+    }
+  }
+
+  article {
+    h2 {
+      font-size: 1.7rem;
+      margin-top: 2.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--global-divider-color);
+    }
+    h3 {
+      font-family: $font-family-sans;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--global-text-color-light);
+      margin-top: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
 // Social (bottom)
 
 .social {
   text-align: center;
+  margin-top: 2.5rem;
   .contact-icons {
-    font-size: 4rem;
+    font-size: 2rem;
+    a {
+      margin: 0 0.45rem;
+    }
     a {
       i::before {
         color: var(--global-text-color);
@@ -430,17 +497,23 @@ footer.sticky-bottom {
     margin-top: 0;
 
     li {
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       .abbr {
         height: 2rem;
         margin-bottom: 0.5rem;
         abbr {
           display: inline-block;
           background-color: var(--global-theme-color);
-          padding-left: 1rem;
-          padding-right: 1rem;
+          border-radius: 0.35rem;
+          color: var(--global-badge-text-color);
+          font-family: $font-family-sans;
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          line-height: 1.9;
+          padding: 0.05rem 0.65rem;
           a {
-            color: white;
+            color: var(--global-badge-text-color);
             &:hover {
               text-decoration: none;
             }
@@ -452,7 +525,21 @@ footer.sticky-bottom {
         }
       }
       .title {
-        font-weight: bolder;
+        font-family: $font-family-serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        line-height: 1.35;
+        margin-bottom: 0.15rem;
+      }
+      .author {
+        font-size: 0.92rem;
+      }
+      .periodical {
+        font-size: 0.92rem;
+        color: var(--global-text-color-light);
+        em {
+          color: var(--global-text-color-light);
+        }
       }
       .author {
         a {
@@ -468,15 +555,20 @@ footer.sticky-bottom {
         }
       }
       .links {
+        margin-top: 0.4rem;
         a.btn {
-          color: var(--global-text-color);
-          border: 1px solid var(--global-text-color);
-          padding-left: 1rem;
-          padding-right: 1rem;
-          padding-top: 0.25rem;
-          padding-bottom: 0.25rem;
+          color: var(--global-text-color-light);
+          border: 1px solid var(--global-divider-color);
+          border-radius: 2rem;
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.05em;
+          padding: 0.25rem 0.85rem;
+          margin: 0 0.35rem 0.3rem 0;
+          transition: all 0.15s ease-in-out;
           &:hover {
-            color: var(--global-theme-color);
+            color: var(--global-badge-text-color);
+            background-color: var(--global-theme-color);
             border-color: var(--global-theme-color);
           }
         }
