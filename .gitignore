@@ -9,3 +9,10 @@ _site
 Gemfile.lock
 vendor
 
+cv-source/*.aux
+cv-source/*.log
+cv-source/*.out
+cv-source/*.fls
+cv-source/*.fdb_latexmk
+cv-source/*.synctex.gz
+cv-source/*.pdf

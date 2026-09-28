@@ -1,0 +1,41 @@
+name: Build CV
+
+# Compiles cv-source/SzymonSacher_CV.tex and commits the PDF to
+# assets/pdf/SzymonSacher_CV.pdf on the same branch. Edit the CV on a
+# branch / PR: the refreshed PDF is committed there and goes live on merge.
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+    paths:
+      - 'cv-source/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Compile CV
+      uses: xu-cheng/latex-action@v3
+      with:
+        root_file: SzymonSacher_CV.tex
+        working_directory: cv-source
+    - name: Commit PDF
+      run: |
+        sudo cp cv-source/SzymonSacher_CV.pdf assets/pdf/SzymonSacher_CV.pdf
+        sudo chown "$(id -u):$(id -g)" assets/pdf/SzymonSacher_CV.pdf
+        git config user.name "GitHub Action"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add assets/pdf/SzymonSacher_CV.pdf
+        if git diff --cached --quiet; then
+          echo "CV PDF unchanged"
+        else
+          git commit -m "Rebuild CV PDF"
+          git push
+        fi
