@@ -3,4 +3,6 @@ ReStat:
 MktSci:
   url: https://pubsonline.informs.org/journal/mksc
 arXiv:
-  url: https://arxiv.org/abs/2402.15585
+  url: https://arxiv.org/
+Anthropic:
+  url: https://www.anthropic.com/institute
