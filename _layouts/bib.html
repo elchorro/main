@@ -68,7 +68,8 @@
           {%- if entry.note -%}
             {%- capture entrynote -%}{{ " " }}{{entry.note}}{%- endcapture -%}
           {%- endif -%}
-          {%- capture periodical -%}{{ entrytype }}{{ entrymonth }}{{ entryyear }}{{ entrynote }}{%- endcapture -%}
+          {%- capture entryvolume -%}{%- if entry.volume -%}, {{ entry.volume }}{%- if entry.number -%}({{ entry.number }}){%- endif -%}{%- if entry.pages -%}: {{ entry.pages }}{%- endif -%}{%- endif -%}{%- endcapture -%}
+          {%- capture periodical -%}{{ entrytype }}{{ entryvolume }}{{ entrymonth }}{{ entryyear }}{{ entrynote }}{%- endcapture -%}
           <div class="periodical">
             {{ periodical | strip }}
           </div>
