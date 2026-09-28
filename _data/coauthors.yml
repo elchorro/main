@@ -21,3 +21,10 @@
 "Christensen":
   - firstname: ["Timothy", "Tim"]
     url: https://tmchristensen.com/
+"Korinek":
+  - firstname: ["Anton"]
+    url: https://www.korinek.com/
+
+"Jones":
+  - firstname: ["Charles I.", "Charles", "Chad"]
+    url: https://web.stanford.edu/~chadj/
